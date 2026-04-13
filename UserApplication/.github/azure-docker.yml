@@ -1,0 +1,44 @@
+name: Build and Deploy to Azure
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Login to ACR
+      - name: Login to ACR
+        uses: docker/login-action@v2
+        with:
+          registry: ewalletapp.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      # Build Docker image
+      - name: Build image
+        run: docker build -t ewalletapp.azurecr.io/user-service:latest ./UserApplication
+
+      # Push Docker image
+      - name: Push image
+        run: docker push ewalletapp.azurecr.io/user-service:latest
+
+      # Login to Azure
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Deploy to Container Apps
+      - name: Deploy to Azure Container Apps
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          appName: user-service-app
+          resourceGroup: E-WalletApp
+          imageToDeploy: ewalletapp.azurecr.io/user-service:latest
