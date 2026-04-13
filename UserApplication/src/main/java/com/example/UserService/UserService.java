@@ -3,7 +3,7 @@ package com.example.UserService;
 import com.example.UserDto.CreateUserRequestDto;
 import com.example.UserDto.UserDto;
 import com.example.UserEntity.UserEntity;
-import com.example.UserRepository.UserCacheRepository;
+//import com.example.UserRepository.UserCacheRepository;
 import com.example.UserRepository.UserRepository;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,7 +18,7 @@ import org.springframework.util.ObjectUtils;
 public class UserService {
     private static final String USER_CREATE_TOPIC = "user_created";
 
-    @Autowired private UserCacheRepository cacheRepository;
+//    @Autowired private UserCacheRepository cacheRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -41,12 +41,13 @@ public class UserService {
     }
 
     public UserEntity get(Integer userId) throws Exception {
-        UserEntity user = cacheRepository.get(userId);
+//        UserEntity user = cacheRepository.get(userId);
+        UserEntity user = userRepository.findById(userId).orElseThrow(Exception::new);
         if (!ObjectUtils.isEmpty(user)) {
             return user;
         }
-        user = userRepository.findById(userId).orElseThrow(Exception::new);
-        cacheRepository.set(user);
+        /*user = userRepository.findById(userId).orElseThrow(Exception::new);
+        cacheRepository.set(user);*/
         return user;
     }
 }
