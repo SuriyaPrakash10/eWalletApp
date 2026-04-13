@@ -42,3 +42,7 @@ jobs:
           appName: user-service-app
           resourceGroup: E-WalletApp
           imageToDeploy: ewalletapp.azurecr.io/user-service:latest
+
+          registryUrl: ewalletapp.azurecr.io
+          registryUsername: ${{ secrets.ACR_USERNAME }}
+          registryPassword: ${{ secrets.ACR_PASSWORD }}
