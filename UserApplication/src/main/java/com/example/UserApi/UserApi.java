@@ -25,5 +25,6 @@ public class UserApi {
        UserEntity user = userService.get(userId);
         return user;
     }
+
 }
 
